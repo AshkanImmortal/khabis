@@ -1,0 +1,142 @@
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0b3d2e" />
+<title>هفت خبیث | شمارشگر امتیاز</title>
+<meta name="description" content="شمارشگر امتیاز بازی ورق هفت خبیث" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+
+<div class="app-shell">
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-mark">♠</span>
+      <div class="brand-text">
+        <h1>هفت خبیث</h1>
+        <p>شمارشگر امتیاز</p>
+      </div>
+      <span class="brand-mark brand-mark--alt">♥</span>
+    </div>
+  </header>
+
+  <main id="app" class="app-main">
+    <!-- SETUP -->
+    <section id="screen-setup" class="screen">
+      <div class="card">
+        <h2 class="card-title">تنظیمات بازی</h2>
+
+        <label class="field">
+          <span class="field-label">امتیاز حذف (هر کس به این امتیاز برسد، حذف می‌شود)</span>
+          <input id="elim-input" class="text-input" type="number" inputmode="numeric" min="1" value="100" />
+        </label>
+
+        <div class="field">
+          <div class="field-row">
+            <span class="field-label">بازیکن‌ها</span>
+            <span id="player-count-badge" class="badge">۰ نفر</span>
+          </div>
+          <div id="setup-players" class="setup-players"></div>
+          <button id="add-player-btn" class="btn btn--ghost btn--block" type="button">＋ افزودن بازیکن</button>
+        </div>
+
+        <p id="setup-error" class="form-error" hidden></p>
+        <button id="start-btn" class="btn btn--primary btn--block btn--lg" type="button">شروع بازی</button>
+      </div>
+    </section>
+
+    <!-- GAME -->
+    <section id="screen-game" class="screen" hidden>
+      <div class="stats-bar">
+        <div class="stat">
+          <span class="stat-value" id="stat-hand">۰</span>
+          <span class="stat-label">دست</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-active">۰</span>
+          <span class="stat-label">بازیکن فعال</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-sum">۰</span>
+          <span class="stat-label">مجموع امتیازها</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-elim">۰</span>
+          <span class="stat-label">امتیاز حذف</span>
+        </div>
+      </div>
+
+      <div id="scoreboard" class="scoreboard"></div>
+
+      <div class="game-actions">
+        <button id="new-hand-btn" class="btn btn--primary btn--block btn--lg">ثبت دست جدید</button>
+        <div class="game-actions__row">
+          <button id="undo-btn" class="btn btn--ghost">↺ برگرداندن دست آخر</button>
+          <button id="reset-btn" class="btn btn--danger-ghost">بازی جدید</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINISHED -->
+    <section id="screen-finished" class="screen" hidden>
+      <div class="card champion-card">
+        <div class="champion-crown">♛</div>
+        <p class="champion-eyebrow">قهرمان بازی</p>
+        <h2 id="champion-name" class="champion-name">—</h2>
+        <p class="champion-sub">با کمترین امتیاز، آخرین بازمانده</p>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">رده‌بندی نهایی</h2>
+        <ol id="final-ranking" class="ranking"></ol>
+      </div>
+
+      <button id="finished-reset-btn" class="btn btn--primary btn--block btn--lg">بازی جدید</button>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span>هفت خبیث · امتیازها ذخیره می‌شوند</span>
+  </footer>
+</div>
+
+<!-- HAND ENTRY MODAL -->
+<div id="hand-modal" class="modal" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="hand-modal-title">
+    <div class="modal__header">
+      <h2 id="hand-modal-title">امتیاز این دست</h2>
+      <p class="modal__hint">امتیازی که به هر بازیکن اضافه می‌شود را وارد کنید</p>
+    </div>
+    <div id="hand-inputs" class="hand-inputs"></div>
+    <div class="hand-total">
+      <span>مجموع این دست</span>
+      <span id="hand-total-value">۰</span>
+    </div>
+    <div class="modal__actions">
+      <button id="hand-cancel-btn" class="btn btn--ghost">انصراف</button>
+      <button id="hand-confirm-btn" class="btn btn--primary">ثبت</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirm-modal" class="modal" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__panel modal__panel--sm" role="dialog" aria-modal="true">
+    <div class="modal__header">
+      <h2 id="confirm-title">تأیید</h2>
+      <p id="confirm-message" class="modal__hint">آیا مطمئن هستید؟</p>
+    </div>
+    <div class="modal__actions">
+      <button id="confirm-cancel-btn" class="btn btn--ghost">انصراف</button>
+      <button id="confirm-ok-btn" class="btn btn--danger">تأیید</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
