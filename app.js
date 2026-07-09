@@ -52,9 +52,11 @@ function loadState() {
 
 /* ---------- DOM refs ---------- */
 const $ = (id) => document.getElementById(id);
+// NOTE: keys MUST match the values of state.phase ("setup" | "playing" |
+// "finished"), since render() shows the screen whose key === phase.
 const screens = {
   setup: $("screen-setup"),
-  game: $("screen-game"),
+  playing: $("screen-game"),
   finished: $("screen-finished"),
 };
 
