@@ -218,9 +218,9 @@ function openHandModal() {
       const row = document.createElement("div");
       row.className = "hand-input-row";
       row.innerHTML = `
-        <div>
-          <div class="hi-name">${escapeHtml(p.name)}</div>
-          <div class="hi-current">فعلی: ${toFa(p.score)}</div>
+        <div class="hi-meta">
+          <span class="hi-name">${escapeHtml(p.name)}</span>
+          <span class="hi-current">فعلی ${toFa(p.score)}</span>
         </div>
         <input class="hi-input" type="text" inputmode="numeric"
                data-pid="${p.id}" value="0"
